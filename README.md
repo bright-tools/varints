@@ -1,15 +1,8 @@
-ASCII Representation of Integers (AROI)
-=======================================
+Variable Length Integer Encoding
+================================
 
-[![Build Status](https://travis-ci.org/bright-tools/aroi.svg?branch=master)](https://travis-ci.org/bright-tools/aroi)
+[![Build Status](https://travis-ci.org/bright-tools/varints.svg?branch=master)](https://travis-ci.org/bright-tools/varints)
 
-This is a Python module which is intended to assist with encoding integers (and
-lists of integers) into more compact ASCII representations which use less
-memory.
+This is a Python module which is intended to assist with variable-length encoding integers (and lists of integers) into more compact representations which use less memory.
 
-The motive for this module was initially during a large tree-search program
-that I was implementing.  Each node in the tree had a list of integers
-associated with it, but as the number of nodes grew, the memory occupied by the
-millions of Python arrays became significant.  Encoding the content of the
-arrays into strings, then decoding when required resulted in significant savings
-when considering hundreds of thousands of nodes.
+Generally in Python, integers are stored as [long](https://docs.python.org/2/library/stdtypes.html#numeric-types-int-float-long-complex) meaning that they will use at least 32 bits.  When storing many numbers which do not require 32 bits, this becomes significantly wasteful; variable length representation can assist in such cases.

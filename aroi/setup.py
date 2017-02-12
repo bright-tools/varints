@@ -17,18 +17,18 @@
 from setuptools import setup
 import unittest
 
-def aroi_test_suite():
+def varints_test_suite():
     test_loader = unittest.TestLoader()
     test_suite = test_loader.discover('tests', pattern='test_*.py')
     return test_suite
 
-setup(name='aroi',
+setup(name='varints',
       version='0.1',
-      description='ASCII Representation of Integers',
-      url='http://github.com/storborg/funniest',
+      description='Variable-length encoding of integers',
+      url='http://github.com/bright-tools/varints',
       author='John Bailey',
       author_email='dev@brightsilence.com',
       license='Apache',
-      packages=['aroi'],
-      test_suite='setup.aroi_test_suite',
+      packages=['varints'],
+      test_suite='setup.varints_test_suite',
       zip_safe=False)

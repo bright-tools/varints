@@ -1,3 +1,18 @@
+#!/usr/bin/python
+
+import sys
+
+if sys.version_info[0] > '2':
+    def varint_storage(b):
+        return bytes((b, ))
+else:
+    def varint_storage(b):
+        return chr(b)
+
+def dump( num ):
+    print( "Len: {}",len(num))
+    for element in num:
+        print( "{}".format( ord(element) ))
 
 def bitsUsed( num ):
     if num < 2:
