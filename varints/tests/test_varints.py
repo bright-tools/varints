@@ -19,6 +19,7 @@ import varints
 
 class TestStringMethods(unittest.TestCase):
 
+    """ Test the sqlite varint format, using a value of zero """
     def test_sqlite_single_number_zero(self):
         test_data = 0
         expected_result = varints.varint_storage(0)
@@ -29,6 +30,8 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual(ascii_result,expected_result)
         self.assertEqual(num_result,test_data)
 
+    """ Test the sqlite varint format, using the maximum value which can be
+        represented by a single varint byte """
     def test_sqlite_single_number_max_one_byte(self):
         test_data = 240
         expected_result = varints.varint_storage(240)
@@ -39,6 +42,8 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual(ascii_result,expected_result)
         self.assertEqual(num_result,test_data)
 
+    """ Test the sqlite varint format, using the minimum value which can be
+        represented by a two byte varint """
     def test_sqlite_single_number_min_two_byte(self):
         test_data = 241
         expected_result = varints.varint_storage( 241 ) + \
@@ -50,6 +55,8 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual(ascii_result,expected_result)
         self.assertEqual(num_result,test_data)
 
+    """ Test the sqlite varint format, using the maximum value which can be
+        represented by a two byte varint """
     def test_sqlite_single_number_max_two_byte(self):
         test_data = 2287
         expected_result = varints.varint_storage( 248 ) + \
@@ -61,6 +68,8 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual(ascii_result,expected_result)
         self.assertEqual(num_result,test_data)
 
+    """ Test the sqlite varint format, using the minimum value which can be
+        represented by a three byte varint """
     def test_sqlite_single_number_min_three_byte(self):
         test_data = 2288
         expected_result = varints.varint_storage( 249 ) + \
@@ -73,6 +82,8 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual(ascii_result,expected_result)
         self.assertEqual(num_result,test_data)
 
+    """ Test the sqlite varint format, using the maximum value which can be
+        represented by a three byte varint """
     def test_sqlite_single_number_max_three_byte(self):
         test_data = 67823 
         expected_result = varints.varint_storage( 249 ) + \
@@ -85,6 +96,8 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual(ascii_result,expected_result)
         self.assertEqual(num_result,test_data)
 
+    """ Test the sqlite varint format, using the minimum value which can be
+        represented by a four byte varint """
     def test_sqlite_single_number_min_four_byte(self):
         test_data = 67824
         expected_result = varints.varint_storage( 250 ) + \
@@ -98,12 +111,15 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual(ascii_result,expected_result)
         self.assertEqual(num_result,test_data)
 
+    """ Test the sqlite varint format, using the maximum value which can be
+        represented by a four byte varint """
     def test_sqlite_single_number_min_four_byte(self):
         test_data = 16777215
         expected_result = varints.varint_storage( 250 ) + \
                           varints.varint_storage( 255 ) + \
                           varints.varint_storage( 255 ) + \
                           varints.varint_storage( 255 )
+
 
         ascii_result = varints.sqlite.encode(test_data)
         num_result = varints.sqlite.decode(ascii_result)
