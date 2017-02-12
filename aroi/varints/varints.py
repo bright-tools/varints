@@ -2,7 +2,7 @@
 
 import sys
 
-if sys.version_info[0] > '2':
+if sys.version_info[0] > 2:
     def varint_storage(b):
         return bytes((b, ))
 else:
