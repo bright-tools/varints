@@ -5,9 +5,13 @@ import sys
 if sys.version_info[0] > 2:
     def varint_storage(b):
         return bytes((b, ))
+    def store_to_num(b):
+        return b
 else:
     def varint_storage(b):
         return chr(b)
+    def store_to_num(b):
+        return ord(b)
 
 def dump( num ):
     print( "Len: {}",len(num))
