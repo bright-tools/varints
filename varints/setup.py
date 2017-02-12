@@ -23,12 +23,14 @@ def varints_test_suite():
     return test_suite
 
 setup(name='varints',
-      version='0.1',
+      version='0.1.3',
       description='Variable-length encoding of integers',
       url='http://github.com/bright-tools/varints',
       author='John Bailey',
       author_email='dev@brightsilence.com',
       license='Apache',
+      long_description=open('README', 'rt').read(),
       packages=['varints'],
       test_suite='setup.varints_test_suite',
+      keywords = ['varint', 'integer', 'variable', 'length' ],
       zip_safe=False)
