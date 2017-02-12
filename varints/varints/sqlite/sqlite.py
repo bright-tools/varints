@@ -20,47 +20,51 @@
 from ..varints import varint_storage
 from ..varints import store_to_num
 
+ONE_BYTE_LIMIT = 240
+TWO_BYTE_LIMIT = 2287
+THREE_BYTE_LIMIT = 67823
+FOUR_BYTE_LIMIT = 16777215
+THREE_BYTE_HEADER = 249
+FOUR_BYTE_HEADER = 250
+BYTE_VALS = 256
+SHORT_VALS = 65536
+
 def encode( num ):
     ret_val = None
-    if( num < 241 ):
+    if( num <= ONE_BYTE_LIMIT ):
         ret_val = varint_storage( num )
-    elif( num < 2288 ):
-        top = num-240
-        ret_val = varint_storage( (top // 256)+241 ) + \
-                  varint_storage( top % 256 )
-    elif( num < 67824 ):
-        top = num-2288
-        ret_val = varint_storage( 249 ) + \
-                  varint_storage( top // 256 ) + \
-                  varint_storage( top % 256 )
-    elif( num < 67824 ):
-        top = num-2288
-        ret_val = varint_storage( 249 ) + \
-                  varint_storage( top // 256 ) + \
-                  varint_storage( top % 256 )
-    elif( num < 16777216 ):
-        top = num % 65536
-        ret_val = varint_storage( 250 ) + \
-                  varint_storage( num // 65536 ) + \
-                  varint_storage( top // 256 ) + \
-                  varint_storage( top % 256 )
+    elif( num <= TWO_BYTE_LIMIT ):
+        top = num-ONE_BYTE_LIMIT
+        ret_val = varint_storage( (top // BYTE_VALS)+ONE_BYTE_LIMIT+1 ) + \
+                  varint_storage( top % BYTE_VALS )
+    elif( num <= THREE_BYTE_LIMIT ):
+        top = num-(TWO_BYTE_LIMIT+1)
+        ret_val = varint_storage( THREE_BYTE_HEADER ) + \
+                  varint_storage( top // BYTE_VALS ) + \
+                  varint_storage( top % BYTE_VALS )
+    elif( num <= FOUR_BYTE_LIMIT ):
+        top = num % SHORT_VALS
+        ret_val = varint_storage( FOUR_BYTE_HEADER ) + \
+                  varint_storage( num // SHORT_VALS ) + \
+                  varint_storage( top // BYTE_VALS ) + \
+                  varint_storage( top % BYTE_VALS )
     return ret_val
 
 def decode( num ):
     ret_val = None
     first = store_to_num( num[ 0 ] )
-    if( first < 241 ):
+    if( first <= ONE_BYTE_LIMIT ):
         ret_val = first
-    elif( first < 249 ):
+    elif( first < THREE_BYTE_HEADER ):
         second = store_to_num( num[ 1 ] )
-        ret_val = 240+(256*(first-241))+second
-    elif( first == 249 ):
+        ret_val = ONE_BYTE_LIMIT+(BYTE_VALS*(first-(ONE_BYTE_LIMIT+1)))+second
+    elif( first == THREE_BYTE_HEADER ):
         second = store_to_num( num[ 1 ] )
         third = store_to_num( num[ 2 ] )
-        ret_val = 2288+(256*second)+third
-    elif( first == 250 ):
+        ret_val = (TWO_BYTE_LIMIT+1)+(BYTE_VALS*second)+third
+    elif( first == FOUR_BYTE_HEADER ):
         second = store_to_num( num[ 1 ] )
         third = store_to_num( num[ 2 ] )
         fourth = store_to_num( num[ 3 ] )
-        ret_val = (second*65536) + (third*256) + fourth
+        ret_val = (second*SHORT_VALS) + (third*BYTE_VALS) + fourth
     return ret_val
