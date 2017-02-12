@@ -17,7 +17,7 @@
 # Based on the encoding method described at
 #  https://sqlite.org/src4/doc/trunk/www/varint.wiki
 
-from ..varints import varint_storage,empty_varint_storage,num_types
+from ..varints import varint_storage,empty_varint_storage,num_types,generic_encode,generic_decode
 from ..varints import store_to_num
 
 ONE_BYTE_LIMIT = 240
@@ -30,12 +30,7 @@ BYTE_VALS = 256
 SHORT_VALS = 65536
 
 def encode( num ):
-    ret_val = None
-    if( isinstance(num, list)):
-        ret_val = encode_list( num )
-    elif( isinstance( num, num_types() )):
-        ret_val = encode_int( num )
-    return ret_val
+    return generic_encode( num, funcs )
 
 def encode_list( num ):
     ret_val = empty_varint_storage()
@@ -65,24 +60,7 @@ def encode_int( num ):
     return ret_val
 
 def decode( num ):
-    ret_val = None
-    if( isinstance(num, (str,bytes))):
-        ret_val = decode_list( num )
-    return ret_val
-
-def decode_list( num ):
-    ret_val = None
-    ptr = 0
-    while ptr < len( num ):
-        (int_val, bytes_used) = decode_val( num[ptr:] )
-        ptr = ptr + bytes_used
-        if ret_val is None:
-            ret_val = int_val
-        else:
-            if isinstance( ret_val, num_types()):
-                ret_val = [ret_val]
-            ret_val.append( int_val )
-    return ret_val
+    return generic_decode( num, funcs )
 
 def decode_val( num ):
     ret_val = None
@@ -106,3 +84,6 @@ def decode_val( num ):
         ret_val = (second*SHORT_VALS) + (third*BYTE_VALS) + fourth
         bytes_used = 4
     return (ret_val, bytes_used)
+
+funcs = { 'decode_val': decode_val,
+          'encode_int': encode_int }

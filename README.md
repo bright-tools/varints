@@ -74,3 +74,31 @@ Meaning that:
 So why use varint in Python?  In the case that we need a compact method to store a list of (frequently small) numbers, and we do not generally need random access to the numbers contained.
 
 One application is during [tree-search](https://en.wikipedia.org/wiki/Search_tree).  Typically we will end up with a number of nodes held in memory and not being accessed while other nodes in the tree are being processed.  If we want to store a state associated with each node (e.g. pieces on a chess board), then we can represent these as as list of integers and minimise the memory usage by using varint representations.
+
+Implementations
+===============
+
+There are a number of different, etablished methods for variable-length integer
+encoding.  varints currently implements
+* [SQLite](https://sqlite.org/src4/doc/trunk/www/varint.wiki)
+* [LEB128](https://en.wikipedia.org/wiki/LEB128)
+
+Examples
+========
+
+The following example demonstrates the saving (using 32-bit Python 2) over 1000
+random numbers in the range 0..1000
+
+```python
+>>> import varints
+>>> import sys
+>>> import random
+>>> nums = [random.randint(0,1000) for _ in xrange(1000)]
+>>> sys.getsizeof(nums)
+4512
+>>> var = varints.sqlite.encode( nums )
+>>> sys.getsizeof(var)
+1816
+```
+
+
