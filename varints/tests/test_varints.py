@@ -98,20 +98,18 @@ class TestStringMethods(unittest.TestCase):
         self.assertEqual(ascii_result,expected_result)
         self.assertEqual(num_result,test_data)
 
-#    def test_single_number_min(self):
-#        self.assertEqual(num2compactascii([1]),chr(int('0100000',2)))
+    def test_sqlite_single_number_min_four_byte(self):
+        test_data = 16777215
+        expected_result = varints.varint_storage( 250 ) + \
+                          varints.varint_storage( 255 ) + \
+                          varints.varint_storage( 255 ) + \
+                          varints.varint_storage( 255 )
 
-#    def test_single_number_max(self):
-#        self.assertEqual(num2compactascii([9]),chr(int('1101001',2)))
-    
-#    def test_double_digit_min(self):
-#        self.assertEqual(num2compactascii([10]),chr(int('1101010',2)))
+        ascii_result = varints.sqlite.encode(test_data)
+        num_result = varints.sqlite.decode(ascii_result)
 
-#    def test_two_digits_min(self):
-#        self.assertEqual(num2compactascii([0,0]),chr(int('0000000',2)))
-    
-#    def test_two_digits_min(self):
-#        self.assertEqual(num2compactascii([0,0]),chr(int('0000000',2)))
+        self.assertEqual(ascii_result,expected_result)
+        self.assertEqual(num_result,test_data)
 
 if __name__ == '__main__':
     unittest.main()
