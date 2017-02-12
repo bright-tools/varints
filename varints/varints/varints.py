@@ -16,7 +16,7 @@ else:
 def dump( num ):
     print( "Len: {}",len(num))
     for element in num:
-        print( "{}".format( ord(element) ))
+        print( "{}".format( store_to_num(element) ))
 
 def bitsUsed( num ):
     if num < 2:

@@ -24,9 +24,26 @@ def encode( num ):
     ret_val = None
     if( num < 241 ):
         ret_val = varint_storage( num )
-    elif( num < 2287 ):
+    elif( num < 2288 ):
         top = num-240
-        ret_val = varint_storage( (top // 256)+241 ) + varint_storage( top % 256 )
+        ret_val = varint_storage( (top // 256)+241 ) + \
+                  varint_storage( top % 256 )
+    elif( num < 67824 ):
+        top = num-2288
+        ret_val = varint_storage( 249 ) + \
+                  varint_storage( top // 256 ) + \
+                  varint_storage( top % 256 )
+    elif( num < 67824 ):
+        top = num-2288
+        ret_val = varint_storage( 249 ) + \
+                  varint_storage( top // 256 ) + \
+                  varint_storage( top % 256 )
+    elif( num < 16777216 ):
+        top = num % 65536
+        ret_val = varint_storage( 250 ) + \
+                  varint_storage( num // 65536 ) + \
+                  varint_storage( top // 256 ) + \
+                  varint_storage( top % 256 )
     return ret_val
 
 def decode( num ):
@@ -37,4 +54,13 @@ def decode( num ):
     elif( first < 249 ):
         second = store_to_num( num[ 1 ] )
         ret_val = 240+(256*(first-241))+second
+    elif( first == 249 ):
+        second = store_to_num( num[ 1 ] )
+        third = store_to_num( num[ 2 ] )
+        ret_val = 2288+(256*second)+third
+    elif( first == 250 ):
+        second = store_to_num( num[ 1 ] )
+        third = store_to_num( num[ 2 ] )
+        fourth = store_to_num( num[ 3 ] )
+        ret_val = (second*65536) + (third*256) + fourth
     return ret_val
