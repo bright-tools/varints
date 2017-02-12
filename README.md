@@ -34,9 +34,7 @@ and the situation is no better in Python 3
 33
 ```
 
-What we can see however is that the Python overhead for bytearray is fixed.
-Increasing the size of the bytearray only increases the memory usage by the
-amount of bytes we've used:
+What we can see however is that the Python overhead for bytearray is fixed.  Increasing the size of the bytearray only increases the memory usage by the amount of bytes we've used:
 
 ```python
 >>> import sys
@@ -52,10 +50,7 @@ So this means that currently:
 * Memory overhead for bytearray objects is higher in Python 3 than Python 2
 * Using varint encoding will actually *cost* us memory rather than saving us memory
 
-If we consider arrays of numbers the situation is somewhat better.  If we take
-the example where we want to store ten zeros.  A varint encoding should mean
-that each zero can be stored in a single byte, meaning that we'd end up with a
-bytearray with 10 elements.  So ...
+If we consider arrays of numbers the situation is somewhat better.  If we take the example where we want to store ten zeros.  A varint encoding should mean that each zero can be stored in a single byte, meaning that we'd end up with a bytearray with 10 elements.  So ...
 
 ```python
 >>> import sys
@@ -76,8 +71,6 @@ Meaning that:
   * Random access to varints stored in a bytearray would be O(n) rather than O(1)
   * We will incur an overhead each time we want to convert to and from varint representation
 
-So why use varint in Python?  In the case that we need a compact method to
-store a list of (frequently small) numbers, and we do not generally need random
-access to the numbers contained.
+So why use varint in Python?  In the case that we need a compact method to store a list of (frequently small) numbers, and we do not generally need random access to the numbers contained.
 
 One application is during [tree-search](https://en.wikipedia.org/wiki/Search_tree).  Typically we will end up with a number of nodes held in memory and not being accessed while other nodes in the tree are being processed.  If we want to store a state associated with each node (e.g. pieces on a chess board), then we can represent these as as list of integers and minimise the memory usage by using varint representations.
