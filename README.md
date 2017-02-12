@@ -5,6 +5,11 @@ Variable Length Integer Encoding
 
 This is a Python module which is intended to assist with variable-length encoding integers (and lists of integers) into more compact representations which use less memory.
 
+Implementation
+--------------
+
+This implementation is intended to work on Python 2 & Python 3 & will be published as 'varints' on [PyPI](https://pypi.python.org/pypi)
+
 Notes on Memory Usage
 ---------------------
 
@@ -78,16 +83,14 @@ One application is during [tree-search](https://en.wikipedia.org/wiki/Search_tre
 Implementations
 ===============
 
-There are a number of different, etablished methods for variable-length integer
-encoding.  varints currently implements
+There are a number of different, etablished methods for variable-length integer encoding.  varints currently implements
 * [SQLite](https://sqlite.org/src4/doc/trunk/www/varint.wiki)
 * [LEB128](https://en.wikipedia.org/wiki/LEB128)
 
 Examples
 ========
 
-The following example demonstrates the saving (using 32-bit Python 2) over 1000
-random numbers in the range 0..1000
+The following example demonstrates the saving (using 32-bit Python 2) over 1000 random numbers in the range 0..1000
 
 ```python
 >>> import varints
@@ -101,4 +104,8 @@ random numbers in the range 0..1000
 1816
 ```
 
+Other Implementations
+=====================
 
+* [Implementation in C++](https://github.com/stoklund/varint)
+* [LEB128 in Python - PyPI varint](https://github.com/fmoo/python-varint)
