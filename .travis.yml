@@ -1,13 +1,21 @@
 language: python
+env:
+  - testbin=unittest
 python:
   - "2.6"
   - "2.7"
-    #  - "3.2"
-    #  - "3.3"
-    #  - "3.4"
-    #  - "3.5"
-    #  - "3.6"
+  - "3.2"
+  - "3.3"
+  - "3.4"
+  - "3.5"
+  - "3.6"
 install:
   - pip install -r requirements.txt
 script: 
-  - if [[ $TRAVIS_PYTHON_VERSION == 2.6 ]]; then python -m unittest2.__main__ discover varints; else python -m unittest discover varints; fi
+  -  python -m $testbin discover varints
+matrix:
+  include:
+    - python: "2.6"
+      env:
+        - testbin=unittest2.__main__
+    
