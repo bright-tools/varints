@@ -3,20 +3,28 @@
 import sys
 
 if sys.version_info[0] > 2:
+    def empty_varint_storage():
+        return bytes()
     def varint_storage(b):
         return bytes((b, ))
     def store_to_num(b):
         return b
+    def num_types():
+        return (int)
 else:
+    def empty_varint_storage():
+        return ""
     def varint_storage(b):
         return chr(b)
     def store_to_num(b):
         return ord(b)
+    def num_types():
+        return (int,long)
 
 def dump( num ):
-    print( "Len: {}",len(num))
+    print( "Len: {}".format( len(num) ))
     for element in num:
-        print( "{}".format( store_to_num(element) ))
+        print( "B: {}".format( store_to_num(element) ))
 
 def bitsUsed( num ):
     if num < 2:
