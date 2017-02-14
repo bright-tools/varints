@@ -30,6 +30,9 @@ def encode_int( num ):
     ret_val = None
     working = num
     first = True
+    
+    if num < 0:
+        raise ValueError("Negative numbers not handled")
 
     while( first or working ):
         first = False

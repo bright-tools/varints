@@ -23,23 +23,47 @@ from ..varints import store_to_num
 ONE_BYTE_LIMIT = 240
 TWO_BYTE_LIMIT = 2287
 THREE_BYTE_LIMIT = 67823
+
 FOUR_BYTE_LIMIT = 16777215
+FIVE_BYTE_LIMIT = 4294967295
+SIX_BYTE_LIMIT = 1099511627775
+SEVEN_BYTE_LIMIT = 281474976710655
+EIGHT_BYTE_LIMIT = 72057594037927935
+NINE_BYTE_LIMIT = 18446744073709551615
 THREE_BYTE_HEADER = 249
 FOUR_BYTE_HEADER = 250
+FIVE_BYTE_HEADER = 251
+SIX_BYTE_HEADER = 252
+SEVEN_BYTE_HEADER = 253
+EIGHT_BYTE_HEADER = 254
+NINE_BYTE_HEADER = 255
 BYTE_VALS = 256
 SHORT_VALS = 65536
+
+BUCKET_OFFSET = 2
+
+buckets = [ { 'limit': FOUR_BYTE_LIMIT,
+              'header': FOUR_BYTE_HEADER },
+            { 'limit': FIVE_BYTE_LIMIT,
+              'header': FIVE_BYTE_HEADER },
+            { 'limit': SIX_BYTE_LIMIT,
+              'header': SIX_BYTE_HEADER },
+            { 'limit': SEVEN_BYTE_LIMIT,
+              'header': SEVEN_BYTE_HEADER },
+            { 'limit': EIGHT_BYTE_LIMIT,
+              'header': EIGHT_BYTE_HEADER },
+            { 'limit': NINE_BYTE_LIMIT,
+              'header': NINE_BYTE_HEADER },
+          ]
 
 def encode( num ):
     return generic_encode( num, funcs )
 
-def encode_list( num ):
-    ret_val = empty_varint_storage()
-    for val in num:
-        ret_val = ret_val + encode_int( val )
-    return ret_val
-
 def encode_int( num ):
     ret_val = None
+    if num < 0:
+        raise ValueError("Negative numbers not handled")
+
     if( num <= ONE_BYTE_LIMIT ):
         ret_val = varint_storage( num )
     elif( num <= TWO_BYTE_LIMIT ):
@@ -51,12 +75,27 @@ def encode_int( num ):
         ret_val = varint_storage( THREE_BYTE_HEADER ) + \
                   varint_storage( top // BYTE_VALS ) + \
                   varint_storage( top % BYTE_VALS )
-    elif( num <= FOUR_BYTE_LIMIT ):
-        top = num % SHORT_VALS
-        ret_val = varint_storage( FOUR_BYTE_HEADER ) + \
-                  varint_storage( num // SHORT_VALS ) + \
-                  varint_storage( top // BYTE_VALS ) + \
-                  varint_storage( top % BYTE_VALS )
+    else:
+        start = 0
+
+        # Work out how many bytes are needed to store this value
+        while(( start < len( buckets )) and
+              ( num > buckets[start]['limit'])):
+            start = start + 1
+
+        if( start == len( buckets )):
+            raise ValueError("Too large")
+
+        ret_val = varint_storage( buckets[start]['header'] )
+        mod = (buckets[start]['limit']+1) // BYTE_VALS
+        start = start + BUCKET_OFFSET
+
+        while( start >= 0 ):
+            start = start - 1
+            ret_val = ret_val + varint_storage( num // mod )
+            num = num % mod
+            mod = mod // BYTE_VALS
+
     return ret_val
 
 def decode( num ):
@@ -77,12 +116,22 @@ def decode_val( num ):
         third = store_to_num( num[ 2 ] )
         ret_val = (TWO_BYTE_LIMIT+1)+(BYTE_VALS*second)+third
         bytes_used = 3
-    elif( first == FOUR_BYTE_HEADER ):
-        second = store_to_num( num[ 1 ] )
-        third = store_to_num( num[ 2 ] )
-        fourth = store_to_num( num[ 3 ] )
-        ret_val = (second*SHORT_VALS) + (third*BYTE_VALS) + fourth
-        bytes_used = 4
+    else:
+        data_bytes = first-247
+        start = data_bytes - 1
+        ret_val = 0
+        i = 1
+
+        mod = (buckets[start-BUCKET_OFFSET]['limit']+1) // BYTE_VALS
+
+        while( start >= 0 ):
+            ret_val = ret_val + (mod * store_to_num( num[ i ] )) 
+            i = i + 1
+            start = start - 1
+            mod = mod // BYTE_VALS
+
+        bytes_used = data_bytes + 1
+
     return (ret_val, bytes_used)
 
 funcs = { 'decode_val': decode_val,

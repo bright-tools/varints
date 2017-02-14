@@ -80,15 +80,19 @@ So why use varint in Python?  In the case that we need a compact method to store
 
 One application is during [tree-search](https://en.wikipedia.org/wiki/Search_tree).  Typically we will end up with a number of nodes held in memory and not being accessed while other nodes in the tree are being processed.  If we want to store a state associated with each node (e.g. pieces on a chess board), then we can represent these as as list of integers and minimise the memory usage by using varint representations.
 
-Implementations
-===============
+varint representations
+----------------------
 
 There are a number of different, etablished methods for variable-length integer encoding.  varints currently implements
-* [SQLite](https://sqlite.org/src4/doc/trunk/www/varint.wiki)
-* [LEB128](https://en.wikipedia.org/wiki/LEB128)
 
-Examples
-========
+| Representation | Notes |
+| -------------- | ----- |
+| [SQLite](https://sqlite.org/src4/doc/trunk/www/varint.wiki) | Positive integers only (varints.sqliteu) |
+| [LEB128](https://en.wikipedia.org/wiki/LEB128) | Positive integers only
+(varints.leb128u) |
+
+Performance
+-----------
 
 The following example demonstrates the saving (using 32-bit Python 2) over 1000 random numbers in the range 0..1000
 
@@ -104,8 +108,18 @@ The following example demonstrates the saving (using 32-bit Python 2) over 1000 
 1816
 ```
 
+The following table shows the performance of the different implementations over a number of different ranges, using randomly generated data.  The measurements were taken using Python 3
+
+| representation |  range(0,10^1) | range(0,10^2) | range(0,10^3) | range(0,10^4) | range(0,10^5) | range(0,10^6) | range(0,10^7) | range(0,10^8) | range(0,10^9) | range(0,10^10) | range(0,10^11) | range(0,10^12) | range(0,10^13) | range(0,10^14) | range(0,10^15) | range(0,10^16) | range(0,10^17) | range(0,10^18) | range(0,10^19) |
+| integer array  |  4516 | 4516 | 4516 | 4516 | 4516 | 4516 | 4516 | 4516 | 4516 | 4516 | 4516 | 4516 | 4516 | 4516 | 4516 | 4516 | 4516 | 4516 | 4516 |
+| leb128u        |  1017 | 1017 | 1799 | 2776 | 3329 | 3949 | 4011 | 4832 | 5000 | 5557 | 5973 | 6013 | 6926 | 7010 | 7731 | 7987 | 8289 | 8939 | 9011 |
+| sqliteu        |  1017 | 1017 | 1896 | 2005 | 2852 | 2997 | 3805 | 3986 | 4729 | 4980 | 5681 | 5974 | 6566 | 6976 | 7455 | 7965 | 8286 | 8939 | 9077 |
+| dlugoszu       |  1017 | 1017 | 1892 | 2010 | 2838 | 2999 | 3804 | 3984 | 4873 | 5006 | 6301 | 6949 | 7903 | 8005 | 8016 | 8017 | 8017 | 8841 | 9913 |
+
+![Test Data Graph](test_data.png)
+
 Other Implementations
-=====================
+---------------------
 
 * [Implementation in C++](https://github.com/stoklund/varint)
 * [LEB128 in Python - PyPI varint](https://github.com/fmoo/python-varint)

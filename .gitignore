@@ -2,6 +2,13 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.pyc
+
+# Vim temps
+*.un~
+*.swp
+*.swo
+*.py~
 
 # C extensions
 *.so
