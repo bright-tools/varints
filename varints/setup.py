@@ -23,7 +23,7 @@ def varints_test_suite():
     return test_suite
 
 setup(name='varints',
-      version='0.1.3',
+      version='0.1.6',
       description='Variable-length encoding of integers',
       url='http://github.com/bright-tools/varints',
       author='John Bailey',
@@ -33,4 +33,18 @@ setup(name='varints',
       packages=['varints'],
       test_suite='setup.varints_test_suite',
       keywords = ['varint', 'integer', 'variable', 'length' ],
+      # See https://PyPI.python.org/PyPI?%3Aaction=list_classifiers
+      classifiers=[
+        'Development Status :: 3 - Alpha',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: Apache Software License',
+        'Programming Language :: Python :: 2.6',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.2',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Topic :: Software Development :: Libraries :: Python Modules',
+    ],
       zip_safe=False)
