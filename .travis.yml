@@ -8,10 +8,13 @@ python:
   - "3.4"
   - "3.5"
   - "3.6"
+sudo: false
 install:
   - pip install -r requirements.txt
 script: 
-  -  python -m $testbin discover varints
+  - coverage run -m $testbin discover varints
+after_success:
+  - codecov
 matrix:
   include:
     - python: "2.6"
