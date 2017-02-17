@@ -42,6 +42,9 @@ SHORT_VALS = 65536
 
 BUCKET_OFFSET = 2
 
+minint = 0
+maxint = NINE_BYTE_LIMIT
+
 buckets = [ { 'limit': FOUR_BYTE_LIMIT,
               'header': FOUR_BYTE_HEADER },
             { 'limit': FIVE_BYTE_LIMIT,
