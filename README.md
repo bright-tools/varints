@@ -88,7 +88,7 @@ There are a number of different, etablished methods for variable-length integer 
 | Representation | Notes |
 | -------------- | ----- |
 | [SQLite](https://sqlite.org/src4/doc/trunk/www/varint.wiki) | Positive integers only (varints.sqliteu) |
-| [LEB128](https://en.wikipedia.org/wiki/LEB128) | Positive (varints.leb128u) and negative (verints.leb128s) integers |
+| [LEB128](https://en.wikipedia.org/wiki/LEB128) | Positive (varints.leb128u) and negative (varints.leb128s) integers |
 | [Dlugosz](http://www.dlugosz.com/ZIP2/VLI.html) | Positive integers only (varints.dlugoszu) |
 
 Performance
@@ -111,6 +111,7 @@ The following example demonstrates the saving (using 32-bit Python 2) over 1000 
 The following table shows the performance of the different implementations over a number of different ranges, using randomly generated data.  The measurements were taken using Python 3
 
 | representation | range(0..10^1)  | range(0..10^2)  | range(0..10^3)  | range(0..10^4)  | range(0..10^5)  | range(0..10^6)  | range(0..10^7)  | range(0..10^8)  | range(0..10^9)  | range(0..10^10) | range(0..10^11) | range(0..10^12) | range(0..10^13) | range(0..10^14) | range(0..10^15) | range(0..10^16) | range(0..10^17) | range(0..10^18) | range(0..10^19) |
+| -------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- |
 | integer array  |            4516 |            4516 |            4516 |            4516 |            4516 |            4516 |            4516 |            4516 |            4516 |            4516 |            4516 |            4516 |            4516 |            4516 |            4516 |            4516 |            4516 |            4516 |            4516 |
 | leb128u        |            1017 |            1017 |            1905 |            2001 |            2855 |            2998 |            3819 |            3997 |            4738 |            4996 |            5641 |            5985 |            6562 |            6967 |            7456 |            7959 |            8304 |            8945 |            9081 |
 | leb128s        |            1017 |            1401 |            1956 |            2177 |            2931 |            3008 |            3922 |            4007 |            4861 |            5007 |            5826 |            6002 |            6755 |            6993 |            7731 |            7983 |            8662 |            8981 |            9536 |
