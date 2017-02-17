@@ -88,7 +88,7 @@ There are a number of different, etablished methods for variable-length integer 
 | Representation | Notes |
 | -------------- | ----- |
 | [SQLite](https://sqlite.org/src4/doc/trunk/www/varint.wiki) | Positive integers only (varints.sqliteu) |
-| [LEB128](https://en.wikipedia.org/wiki/LEB128) | Positive integers only (varints.leb128u) |
+| [LEB128](https://en.wikipedia.org/wiki/LEB128) | Positive (varints.leb128u) and negative (verints.leb128s) integers |
 | [Dlugosz](http://www.dlugosz.com/ZIP2/VLI.html) | Positive integers only (varints.dlugoszu) |
 
 Performance
@@ -110,40 +110,12 @@ The following example demonstrates the saving (using 32-bit Python 2) over 1000 
 
 The following table shows the performance of the different implementations over a number of different ranges, using randomly generated data.  The measurements were taken using Python 3
 
-| representation | range(0,10^1) | range(0,10^2) | range(0,10^3) | range(0,10^4) | 
-| -------------- | ------------- | ------------- | ------------- | ------------- |
-| integer array  |          4516 |          4516 |          4516 |          4516 |
-| leb128u        |          1017 |          1017 |          1799 |          2776 |
-| sqliteu        |          1017 |          1017 |          1896 |          2005 |
-| dlugoszu       |          1017 |          1017 |          1892 |          2010 |
-
-| representation | range(0,10^5) | range(0,10^6) | range(0,10^7) | range(0,10^8) |
-| -------------- | ------------- | ------------- | ------------- | ------------- |
-| integer array  |          4516 |          4516 |          4516 |          4516 |
-| leb128u        |          3329 |          3949 |          4011 |          4832 |
-| sqliteu        |          2852 |          2997 |          3805 |          3986 |
-| dlugoszu       |          2838 |          2999 |          3804 |          3984 |
-
-| representation | range(0,10^9) | range(0,10^10) | range(0,10^11) | range(0,10^12) |
-| -------------- | ------------- | -------------- | -------------- | -------------- |
-| integer array  |          4516 |           4516 |           4516 |           4516 |
-| leb128u        |          5000 |           5557 |           5973 |           6013 |
-| sqliteu        |          4729 |           4980 |           5681 |           5974 |
-| dlugoszu       |          4873 |           5006 |           6301 |           6949 |
-
-| representation | range(0,10^13) | range(0,10^14) | range(0,10^15) | range(0,10^16) |
-| -------------- | -------------- | -------------- | -------------- | -------------- |
-| integer array  |           4516 |           4516 |           4516 |           4516 |
-| leb128u        |           6926 |           7010 |           7731 |           7987 |
-| sqliteu        |           6566 |           6976 |           7455 |           7965 |
-| dlugoszu       |           7903 |           8005 |           8016 |           8017 |
-
-| representation | range(0,10^17) | range(0,10^18) | range(0,10^19) |
-| -------------- | -------------- | -------------- | -------------- |
-| integer array  |           4516 |           4516 |           4516 |
-| leb128u        |           8289 |           8939 |           9011 |
-| sqliteu        |           8286 |           8939 |           9077 |
-| dlugoszu       |           8017 |           8841 |           9913 |
+| representation | range(0..10^1)  | range(0..10^2)  | range(0..10^3)  | range(0..10^4)  | range(0..10^5)  | range(0..10^6)  | range(0..10^7)  | range(0..10^8)  | range(0..10^9)  | range(0..10^10) | range(0..10^11) | range(0..10^12) | range(0..10^13) | range(0..10^14) | range(0..10^15) | range(0..10^16) | range(0..10^17) | range(0..10^18) | range(0..10^19) |
+| integer array  |            4516 |            4516 |            4516 |            4516 |            4516 |            4516 |            4516 |            4516 |            4516 |            4516 |            4516 |            4516 |            4516 |            4516 |            4516 |            4516 |            4516 |            4516 |            4516 |
+| leb128u        |            1017 |            1017 |            1905 |            2001 |            2855 |            2998 |            3819 |            3997 |            4738 |            4996 |            5641 |            5985 |            6562 |            6967 |            7456 |            7959 |            8304 |            8945 |            9081 |
+| leb128s        |            1017 |            1401 |            1956 |            2177 |            2931 |            3008 |            3922 |            4007 |            4861 |            5007 |            5826 |            6002 |            6755 |            6993 |            7731 |            7983 |            8662 |            8981 |            9536 |
+| sqliteu        |            1017 |            1017 |            1792 |            2761 |            3291 |            3952 |            4011 |            4849 |            4993 |            5573 |            5978 |            6012 |            6881 |            7008 |            7731 |            7984 |            8307 |            8945 |            9009 |
+| dlugoszu       |            1017 |            1017 |            1905 |            2001 |            2855 |            2998 |            3819 |            3997 |            4859 |            5007 |            6269 |            6955 |            7876 |            8008 |            8017 |            8017 |            8017 |            8837 |            9901 |
 
 ![Test Data Graph](test_data.png)
 

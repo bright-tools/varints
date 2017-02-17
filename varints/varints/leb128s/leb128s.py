@@ -14,7 +14,7 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-# Based on the unsigned integer encoding method described at
+# Based on the signed integer encoding method described at
 #  https://en.wikipedia.org/wiki/LEB128
 
 from ..varints import varint_storage,empty_varint_storage,num_types,generic_encode,generic_decode
@@ -29,18 +29,17 @@ def decode( num ):
 def encode_int( num ):
     ret_val = None
     working = num
-    first = True
+    more = True
     
-    if num < 0:
-        raise ValueError("Negative numbers not handled")
-
-    while( first or working ):
-        first = False
+    while( more ):
 
         byte = working & 0x7F
         working = working >> 7
 
-        if( working != 0 ):
+        if( ((( working == 0 ) and (( byte & 0x40) == 0 )) or \
+             (( working == -1 ) and (( byte & 0x40 ) != 0 ))) ):
+            more = False
+        else:
             byte = byte | 0x80
 
         if( ret_val is None ):
@@ -51,6 +50,7 @@ def encode_int( num ):
     return ret_val
 
 def decode_val( num ):
+    # TODO: reconsile this with leb128u
     ret_val = None
     bytes_used = 0
     cont = True
@@ -67,6 +67,9 @@ def decode_val( num ):
         ret_val = ret_val | (val << (7*bytes_used))
 
         bytes_used = bytes_used + 1
+
+    if( val & 0x40 ):
+        ret_val |= (-1 << (7*bytes_used))
 
     return( ret_val, bytes_used )
 
