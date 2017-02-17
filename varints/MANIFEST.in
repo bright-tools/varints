@@ -1,0 +1,4 @@
+include test_data.png
+
+# Tests
+include tests/test_*.py
