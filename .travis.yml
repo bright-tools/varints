@@ -12,7 +12,7 @@ sudo: false
 install:
   - pip install -r requirements.txt
 script: 
-  - coverage --omit="tests/*.py" run -m $testbin discover varints
+  - coverage run --omit="tests/*.py" -m $testbin discover varints
 after_success:
   - codecov
 matrix:
