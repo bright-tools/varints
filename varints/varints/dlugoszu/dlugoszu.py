@@ -29,6 +29,9 @@ SIX_BYTE_LIMIT = 1099511627776
 EIGHT_BYTE_LIMIT = 576460752303423487
 NINE_BYTE_LIMIT = 18446744073709551615
 
+minint = 0
+maxint = NINE_BYTE_LIMIT
+
 buckets = [ { 'limit': ONE_BYTE_LIMIT,
               'prefix': 0x0,
               'mod': 1,

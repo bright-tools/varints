@@ -31,6 +31,13 @@ class TestStringMethods(unittest.TestCase):
         num_result = varints.dlugoszu.decode(ascii_result)
         self.assertEqual(num_result,test_data)
 
+    """ Test the dlugoszu varint format, using a number that is too large
+        to be represented """
+    def test_dlugoszu_too_large(self):
+        test_data = varints.dlugoszu.maxint + 1
+
+        self.assertRaises(ValueError,varints.dlugoszu.encode,test_data)
+
     """ Test the dlugoszu varint format, using a negative number """
     def test_dlugoszu_single_number_negative(self):
         test_data = -1
